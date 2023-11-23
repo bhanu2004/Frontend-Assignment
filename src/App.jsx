@@ -1,154 +1,98 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import formData from './data';
-import InputComponent from './component/InputComponent';
-import RadioComponent from './component/RadioComponent';
-import SelectComponent from './component/SelectComponent';
-import SwitchComponent from './component/SwitchComponent';
 import GroupSection from './component/GroupSection';
 
 function App() {
   const [order, setOrder] = useState({}); 
-  const [data, setData] = useState(formData);
-// useEffect(()=>{
-//   console.log("adb",order);
-// },[order]);
+  const [data, setData] = useState();
+  const [jsonData, setJsonData] = useState();
+  
+  // useEffect(()=>{
+  //   console.log(order);
+  // },[order])
+ 
+  const handleConvert = ()=>{
+    try{
+      let currD = JSON.parse(jsonData);
+    setOrder({});
+    setData(currD);
+    }
+    catch(err){
+      alert("Invalid JSON !!")
+    }
+    
+  }
 
+  const handleSubmit = ()=>{
+     let path = [];
+    removeExtra(data,path);
+    console.log(order);
+  }
 
-
-  // const handleData = (item,level0Key, level1key)=>{
-  //   // const [hidden, setHidden] = useState(true);
-  //   console.log("l0",level0Key);
-  //   const grName = "abc";
-  //   const name = `${grName!=null?grName:""}.${item.jsonKey}`;
-  //   if(item.uiType=='Input'){
-  //     if(item.level==0){
-  //       return <div className='section-container'>
-  //         <InputComponent 
-  //         setOrder={setOrder} 
-  //         data={item}/>
-  //         </div>
-  //     }
-  //     else{
-  //       return <InputComponent level0={level0Key}
-  //       setOrder={setOrder}
-  //       data={item}/>
-  //     }
-      
-  //   }
-  //   else if(item.uiType=='Radio'){
-  //     if(item.level==0){
-  //       return <div className='section-container'>
-  //         <RadioComponent 
-  //         setOrder={setOrder} 
-  //         data={item}/>
-  //         </div>
-  //     }
-  //     else{
-  //       return <RadioComponent level0={level0Key}
-  //       setOrder={setOrder}
-  //       data={item}/>
-  //     }
-  //     // return <RadioComponent name={name} setOrder={setOrder} level0={level0Key} level1={level1key} data={item}/>
-  //   }
-  //   else if(item.uiType=='Select'){
-  //     if(item.level==0){
-  //       return <div className='section-container'>
-  //         <SelectComponent 
-  //         setOrder={setOrder} 
-  //         data={item}/>
-  //         </div>
-  //     }
-  //     else{
-  //       return <SelectComponent level0={level0Key}
-  //       setOrder={setOrder}
-  //       data={item}/>
-  //     }
-  //     //return <SelectComponent name={name} setOrder={setOrder} level0={level0Key} level1={level1key} data={item}/>
-  //   }
-  //   else if(item.uiType=="Switch"){
-  //     if(item.level==0){
-  //       return <div className='section-container'>
-  //         <SwitchComponent 
-  //         setOrder={setOrder} 
-  //         data={item}/>
-  //         </div>
-  //     }
-  //     else{
-  //       return <SwitchComponent level0={level0Key}
-  //       setOrder={setOrder}
-  //       data={item}/>
-  //     }
-  //     return <SwitchComponent name={name} setOrder={setOrder} level0={level0Key} level1={level1key} data={item} />
-  //   }
-  //   else if(item.uiType=='Group'){
-      
-  //     return <div className={`${item.level==0?'section-container':""}`}>
-  //       { item.level==0 && <p className='group-head'>{item.label} {item.reqired && <span className='redStar'>*</span>}</p>}
-  //       {item.subParameters.map((subItem)=>{
-  //         return handleData(subItem,item.jsonKey)
-  //       })}
-  //       <div>button</div>
-  //     </div>
-  //   }
-  //   else{
-  //     const jsonKey = item.conditions[0].jsonKey;
-  //     if(level0Key==null) level0Key=item.jsonKey;
-  //     else level1key=item.jsonKey;
-
-  //     const propValue = accessDeepProp(order,jsonKey);
-  //     if(propValue == item.conditions[0].value){
+  const removeExtra = (data,path)=>{
+    for( let x of data){
+      if(x.uiType=='Group'){
+        path.push(x.jsonKey);
+        removeExtra(x.subParameters,path);
+        path.pop();
+      }
+      if(x.uiType=='Ignore'){
+        const value = x.conditions[0].value;
+        const currValue = accessDeepProp(order,x.conditions[0].jsonKey);
+        if(value!=currValue){
+          path.push(x.jsonKey);
+          removeData(path);
+          path.pop();
+        }
         
-  //       const grName = item.jsonKey;
-  //       return <div className={`${item.level==0?'section-container':""}`}>
-  //         {item.level==0 && <p className='group-head'>{item.label} {item.reqired && <span className='redStar'>*</span>}</p>}
-  //         {item.subParameters.map((subItem)=>{
-  //           return handleData(subItem,level0Key,level1key);
-  //         })}
-  //       </div>
-  //     }
-  //     else{
-  //       const delProp = item.conditions[0].value;
-  //       if(!level0Key && order[delProp]){
-  //           setOrder((prevData)=>{
-  //           const copy = {...prevData};
-  //           delete copy[delProp];
-  //           return copy;
-  //         })
-  //       }
-  //       else if(level0Key && !level1key){
-  //         setOrder((prevData)=>{
-  //           const copy = {...prevData};
-  //           delete copy[level0Key];
-  //           return copy;
-  //         })
-  //       }
-  //       else if(level0Key && level1key){  
-  //         if(order[level0Key]!=undefined && order[level0Key][level1key]!=undefined ){
-  //           setOrder((prevData)=>{
-  //             const copy = {...prevData};
-  //             delete copy[level0Key][level1key];
-  //             return copy;
-  //           })
-          
-  //         }
-          
-  //       }
-  //       console.log("abd",order)
-  //     }
-  //   }
-  // }
+      }
+    }
+  }
+  function accessDeepProp(obj, path) {
+    const properties = path.split(".");
+    for (let i = 0; i < properties.length; i++) {
+      if (!obj) return null;
+      obj = obj[properties[i]];
+    }
+    return obj;
+  }
+  const removeData = (path)=>{
+    if(path.length==1){
+      const temp = Array.from(path);
+      setOrder((prevData)=>{
+        const copy = {...prevData};
+        delete copy[temp[0]];
+        return copy;
+      })
+    }
+    else if(path.length==2){
+      const temp = Array.from(path);
+      setOrder((prevData)=>{
+        const copy = {...prevData};
+        delete copy[temp[0]][temp[1]];
+        return copy;
+      })
+    }
+  }
+
+
   return (
     <div className="container">
       <div className="left-panel">
-        <textarea name="" id="" cols="30" rows="10"></textarea>
+        <textarea placeholder='Enter JSON data...' name="" id="" cols="30" rows="10" value={jsonData} onChange={(e)=>{setJsonData(e.target.value)}}></textarea>
+        <button className='convert' onClick={()=>handleConvert()}>Create</button>
       </div>
       <div className="right-panel">
+        <div className='right-form-container'>
         <GroupSection data={data} order={order} setOrder={setOrder}/>
-        {/* {data?.map((item)=>{
-          return handleData(item)
-        })} */}
+        </div>
+        
+        <div className='button-container'>
+        <button className='convert' onClick={()=>{setData([]);setJsonData({});}}>Cancel</button>
+        <button className='convert' onClick={()=>handleSubmit()}>submit</button>
+        </div>
+        
       </div>
     </div>
   );
