@@ -6,7 +6,9 @@ Step 3: run command: 'cd Frontend-Assignment'</br>
 Step 4: install dependencies using command: 'npm i'</br>
 Step 5: run command 'npm start'</br>
 
-### Deployment link
+### `Note: `
+In the project, after filling the form and clicking submit, the JSON object will be printed on console.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Deployment link
+https://frontend-assignment-alpha-sooty.vercel.app/
 
