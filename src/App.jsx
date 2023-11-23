@@ -27,7 +27,7 @@ function App() {
   const handleSubmit = ()=>{
      let path = [];
     removeExtra(data,path);
-    console.log(order);
+    console.log(JSON.stringify(order));
   }
 
   const removeExtra = (data,path)=>{
