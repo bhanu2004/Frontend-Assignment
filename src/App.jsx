@@ -28,6 +28,7 @@ function App() {
      let path = [];
     removeExtra(data,path);
     console.log(JSON.stringify(order));
+    alert('check console to see submitted data');
   }
 
   const removeExtra = (data,path)=>{
